@@ -33,6 +33,8 @@ type Props = {|
   /** the component to use to render new activities notification */
   Notifier: Renderable,
   /** if true, feed shows the Notifier component when new activities are added */
+  Placeholder: Renderable,
+  /** If true, feed shows the Notifier component when new activities are added */
   notify: boolean,
   //** the element that renders the feed footer */
   Footer?: Renderable,
@@ -169,6 +171,21 @@ class FlatFeedInner extends React.Component<PropsInner> {
       deletes: this.props.realtimeDeletes,
       onPress: this._refresh,
     };
+
+    const {
+      refreshing,
+      hasDoneRequest,
+    } = this.props;
+
+    if (this.props.activities.size === 0 && this.props.hasDoneRequest) {
+      return (
+        <React.Fragment>
+          {smartRender(this.props.Notifier, notifierProps)}
+          {smartRender(this.props.Placeholder)}
+        </React.Fragment>
+      );
+    }
+
     return (
       <React.Fragment>
         {smartRender(this.props.Notifier, notifierProps)}
